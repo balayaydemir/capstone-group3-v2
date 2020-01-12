@@ -8,7 +8,7 @@ const withAuthentication = Component => {
     constructor(props) {
       super(props);
       this.state = {
-        authUser: null
+        authUser: null 
       };
     }
 
@@ -17,14 +17,14 @@ const withAuthentication = Component => {
         authUser => {
           if (authUser) {
             this.props.firebase.user(authUser.uid)
-              .once('value')
+              .get()
               .then(snapshot => {
                 this.setState({ 
                   authUser: {
                     authUser: authUser,
-                    username: snapshot.val().username,
-                    org: snapshot.val().org,
-                    role: snapshot.val().role
+                    username: snapshot.data().username,
+                    org: snapshot.data().org,
+                    role: snapshot.data().role
                   }
                 })
               })
@@ -32,9 +32,6 @@ const withAuthentication = Component => {
           } else {
             this.setState({ authUser: null })
           }
-          // authUser
-          //   ? this.setState({ authUser })
-          //   : this.setState({ authUser: null });
         },
       );
     }

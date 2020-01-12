@@ -1,6 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/firestore';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -32,10 +32,14 @@ class Firebase {
   doPasswordUpdate = password =>
     this.auth.currentUser.updatePassword(password);
 
-  user = uid => this.db.collection(`users/${uid}`);
+  user = uid => this.db.collection('users').doc(uid);
 
   users = () => this.db.collection('users');
   
+  getOrg = org => this.db.collection('organizations').where("name", "==", org).get();
+
+  getProjects = orgId => this.db.collection('projects').where("org_id", "==", orgId).get();
+
 }
 
 export default Firebase;

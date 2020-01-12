@@ -33,13 +33,18 @@ class SignUpFormBase extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        return this.props.firebase
-          .user(authUser.user.uid)
-          .set({
-            username,
-            role,
-            org
+        return this.props.firebase.getOrg(org)
+          .then(snapshot => {
+            this.props.firebase
+              .user(authUser.user.uid)
+              .set({
+                username,
+                role,
+                org,
+                org_id: snapshot.docs[0].id
           });
+        })
+        .catch(error => console.error(error));
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
